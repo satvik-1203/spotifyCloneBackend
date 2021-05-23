@@ -2,6 +2,7 @@ const express = require("express");
 
 const app = express();
 const { route: spotify } = require("./routes/spotify");
+const { route: search } = require("./routes/search");
 
 app.use(express.json());
 

@@ -1,6 +1,6 @@
 // packages
 const express = require("express");
-const spotifyApi = require("./spotify");
+const { spotifyApi } = require("./spotify");
 
 const route = express.Router();
 
