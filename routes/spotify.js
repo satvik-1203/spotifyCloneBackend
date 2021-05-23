@@ -38,3 +38,5 @@ var spotifyApi = new SpotifyWebApi(credentials);
 //       console.log('Something went wrong!', err);
 //     }
 //   );
+
+module.exports = spotifyApi;
