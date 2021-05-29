@@ -1,10 +1,10 @@
-//sportifyApi
-
 const SpotifyWebApi = require("spotify-web-api-node");
 
 //exoress
 const express = require("express");
 const route = express.Router();
+
+// other spotify Routes
 
 //dotEnv
 require("dotenv").config(); //dotenv isnt working we need to look at it later
@@ -18,7 +18,7 @@ const credentials = {
 };
 var spotifyApi = new SpotifyWebApi(credentials); // use this since im setting the access token in this instance
 
-route.post("/login", async (req, res) => {
+route.post("/", async (req, res) => {
   // post request since we need the code from the client
   const code = req.body.code;
 

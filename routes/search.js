@@ -1,4 +1,3 @@
-// packages
 const express = require("express");
 const { spotifyApi } = require("./spotify");
 
@@ -6,7 +5,6 @@ const route = express.Router();
 
 route.get("/:name", (req, res) => {
   const songName = req.params.name;
-
   spotifyApi
     .searchTracks(songName)
     .then((data) => {
@@ -21,4 +19,6 @@ route.get("/:name", (req, res) => {
     });
 });
 
-module.exports = route;
+module.exports = {
+  route,
+};
