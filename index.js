@@ -1,9 +1,18 @@
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 const app = express();
-const { route: spotify } = require("./routes/spotify");
-const { route: search } = require("./routes/search");
-const { route: userInfo } = require("./routes/spotifyUserInfo");
+const spotify = require("./src/routes/spotify/index");
+
+mongoose
+  .connect("mongodb://localhost:27017/spotifyHome", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to the database...");
+  })
+  .catch((err) => console.log(err));
 
 app.use(
   cors({
@@ -16,11 +25,11 @@ app.use(
 
 app.use(express.json());
 
-app.use("/spotify/login", spotify);
+app.use("/spotify", spotify);
 
-app.use("/spotify/search", search);
-
-app.use("/spotify/userInfo", userInfo);
+app.get("/", (req, res) => {
+  res.send("Connected to localhost 3001");
+});
 
 app.listen(3001, () => {
   console.log("Listening on port 3001");

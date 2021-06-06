@@ -4,6 +4,8 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const express = require("express");
 const route = express.Router();
 
+const Token = require("../../schema/refreshToken");
+
 // other spotify Routes
 
 //dotEnv
@@ -16,7 +18,8 @@ const credentials = {
   clientSecret: "689ce50f2eef4ca4bc6450d19e3e1a1d",
   redirectUri: "http://localhost:3000",
 };
-var spotifyApi = new SpotifyWebApi(credentials); // use this since im setting the access token in this instance
+
+let spotifyApi = new SpotifyWebApi(credentials); // use this since im setting the access token in this instance
 
 route.post("/", async (req, res) => {
   // post request since we need the code from the client
@@ -30,6 +33,12 @@ route.post("/", async (req, res) => {
       tokenAccess: result.body["access_token"],
       refreshToken: result.body["refresh_token"],
     };
+    const token = new Token({
+      accessToken: result.body["access_token"],
+      refreshToken: result.body["refresh_token"],
+    });
+
+    await token.save();
 
     spotifyApi.setAccessToken(result.body["access_token"]);
     spotifyApi.setRefreshToken(result.body["refresh_token"]);
@@ -38,7 +47,6 @@ route.post("/", async (req, res) => {
     res.send(err).status(401);
   }
 });
-
 module.exports = {
   route,
   spotifyApi,
