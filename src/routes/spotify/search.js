@@ -1,5 +1,5 @@
 const express = require("express");
-const { spotifyApi } = require("./spotify");
+const { spotifyApi } = require("./login");
 
 const route = express.Router();
 

@@ -4,6 +4,8 @@ const SpotifyWebApi = require("spotify-web-api-node");
 const express = require("express");
 const route = express.Router();
 
+const Token = require("../../schema/refreshToken");
+
 // other spotify Routes
 
 //dotEnv
@@ -16,12 +18,12 @@ const credentials = {
   clientSecret: "689ce50f2eef4ca4bc6450d19e3e1a1d",
   redirectUri: "http://localhost:3000",
 };
-var spotifyApi = new SpotifyWebApi(credentials); // use this since im setting the access token in this instance
+
+let spotifyApi = new SpotifyWebApi(credentials); // use this since im setting the access token in this instance
 
 route.post("/", async (req, res) => {
   // post request since we need the code from the client
   const code = req.body.code;
-
   try {
     // authenticating the code and getting the data
     const result = await spotifyApi.authorizationCodeGrant(code);
@@ -30,15 +32,29 @@ route.post("/", async (req, res) => {
       tokenAccess: result.body["access_token"],
       refreshToken: result.body["refresh_token"],
     };
+    const token = new Token({
+      accessToken: result.body["access_token"],
+      refreshToken: result.body["refresh_token"],
+    });
 
-    spotifyApi.setAccessToken(result.body["access_token"]);
-    spotifyApi.setRefreshToken(result.body["refresh_token"]);
-    res.send(tokenData);
+    try {
+      spotifyApi.setAccessToken(result.body["access_token"]);
+      spotifyApi.setRefreshToken(result.body["refresh_token"]);
+    } catch (err) {
+      console.log("Couldn't set the token");
+    }
+
+    try {
+      res.send(tokenData);
+    } catch (err) {
+      console.log("Db isn't connected");
+    }
+
+    await token.save();
   } catch (err) {
     res.send(err).status(401);
   }
 });
-
 module.exports = {
   route,
   spotifyApi,
