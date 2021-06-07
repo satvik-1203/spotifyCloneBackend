@@ -1,10 +1,12 @@
-const route = require("express").Router();
+const express = require("express");
 const Token = require("../../schema/refreshToken");
 const { spotifyApi } = require("./login");
 
-route.get("/:accessToken", async (req, res) => {
+const route = express.Router();
+
+route.get("/:id", async (req, res) => {
   const result = await Token.findOne({
-    accessToken: req.params.accessToken,
+    accessToken: req.params.id,
   });
   if (!result) return res.status(400).send("Invalid Token");
   spotifyApi
@@ -27,4 +29,4 @@ route.get("/:accessToken", async (req, res) => {
     });
 });
 
-module.exports = route;
+module.exports = { route };

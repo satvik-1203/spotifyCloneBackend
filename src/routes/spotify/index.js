@@ -10,6 +10,6 @@ route.use("/search", search);
 
 route.use("/userInfo", spotifyUserInfo);
 
-route.use("/loginWithToken", loginToken);
+route.use("/loginToken", loginToken);
 
 module.exports = route;
