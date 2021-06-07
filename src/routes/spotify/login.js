@@ -24,7 +24,6 @@ let spotifyApi = new SpotifyWebApi(credentials); // use this since im setting th
 route.post("/", async (req, res) => {
   // post request since we need the code from the client
   const code = req.body.code;
-
   try {
     // authenticating the code and getting the data
     const result = await spotifyApi.authorizationCodeGrant(code);
@@ -38,11 +37,20 @@ route.post("/", async (req, res) => {
       refreshToken: result.body["refresh_token"],
     });
 
-    await token.save();
+    try {
+      spotifyApi.setAccessToken(result.body["access_token"]);
+      spotifyApi.setRefreshToken(result.body["refresh_token"]);
+    } catch (err) {
+      console.log("Couldn't set the token");
+    }
 
-    spotifyApi.setAccessToken(result.body["access_token"]);
-    spotifyApi.setRefreshToken(result.body["refresh_token"]);
-    res.send(tokenData);
+    try {
+      res.send(tokenData);
+    } catch (err) {
+      console.log("Db isn't connected");
+    }
+
+    await token.save();
   } catch (err) {
     res.send(err).status(401);
   }
