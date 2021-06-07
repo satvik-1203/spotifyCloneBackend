@@ -46,13 +46,12 @@ route.post("/", async (req, res) => {
 
     try {
       res.send(tokenData);
+      await token.save();
     } catch (err) {
-      console.log("Db isn't connected");
+      console.log("Already exists");
     }
-
-    await token.save();
   } catch (err) {
-    res.send(err).status(401);
+    res.send("error from backend").status(401);
   }
 });
 module.exports = {
