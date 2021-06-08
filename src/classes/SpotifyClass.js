@@ -55,22 +55,58 @@ class SpotifyClass extends SpotifyWebApi {
     super.resetAccessToken();
   }
 
-  async search(req, res) {
-    const accessToke = req.params.accessToken;
+  async spotifySearch(req, res) {
+    const accessToken = req.params.accessToken;
+    console.log(accessToken);
+    if (!accessToken) return res.status(401).send("No access token provided");
 
-    if (!accessToke) return res.status(401).send("No access token provided");
-
-    super.setAccessToken();
+    super.setAccessToken(accessToken);
     super
       .searchTracks(req.params.name)
       .then((data) => {
-        res.json(data);
+        if (data) {
+          res.json(data);
+        } else {
+          res.status(404).json("No songs found under that name");
+        }
       })
       .catch((err) => {
-        res.status(401).send("Server failed");
+        res.status(400).json(err);
+      });
+    super.resetAccessToken();
+  }
+
+  async loginWithToken(req, res) {
+    let accessToken = req.params.accessToken;
+    const result = await Token.findOne({
+      accessToken: accessToken,
+    });
+
+    if (!result) return res.status(400).send("Invalid Token");
+
+    super.setAccessToken(accessToken);
+    super.setRefreshToken(result.refreshToken);
+
+    super
+      .refreshAccessToken()
+      .then(async (data) => {
+        console.log("The access token has been refreshed!");
+
+        // Save the access token so that it's used in future calls
+        await Token.findOneAndUpdate(
+          { accessToken: req.params.accessToken },
+          {
+            accessToken: data.body["access_token"],
+          }
+        );
+        res.json({ accessToken: data.body["access_token"] });
+      })
+      .catch((err) => {
+        console.log("Could not refresh access token", err);
       });
 
     super.resetAccessToken();
+    super.resetRefreshToken();
   }
 }
 
