@@ -1,22 +1,10 @@
 const express = require("express");
-const { spotifyApi } = require("./login");
+const { spotifyClass } = require("./login");
 
 const route = express.Router();
 
-route.get("/:name", (req, res) => {
-  const songName = req.params.name;
-  spotifyApi
-    .searchTracks(songName)
-    .then((data) => {
-      if (data) {
-        res.json(data);
-      } else {
-        res.status(404).json("No songs found under that name");
-      }
-    })
-    .catch((err) => {
-      res.status(400).json(err);
-    });
+route.get("/:accessToken/:name", (req, res) => {
+  spotifyClass.spotifySearch(req, res);
 });
 
 module.exports = {
