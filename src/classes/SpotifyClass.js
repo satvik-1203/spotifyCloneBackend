@@ -27,13 +27,15 @@ class SpotifyClass extends SpotifyWebApi {
         accessToken: result.body["access_token"],
         refreshToken: result.body["refresh_token"],
       });
-
-      await token.save();
-      console.log(result.body);
-      res.send(tokenData);
+      try {
+        await token.save();
+        console.log(result.body);
+        res.send(tokenData);
+      } catch (err) {
+        res.status(400).send("Already exist");
+      }
     } catch (err) {
       res.status(401).send("Error from the backend");
-      console.log(err);
     }
   }
 }
