@@ -16,4 +16,5 @@ route.post("/", async (req, res) => {
 });
 module.exports = {
   route,
+  spotifyClass,
 };

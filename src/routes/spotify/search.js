@@ -3,7 +3,7 @@ const { spotifyApi } = require("./login");
 
 const route = express.Router();
 
-route.get("/:name", (req, res) => {
+route.get("/:accessToken/:name", (req, res) => {
   const songName = req.params.name;
   spotifyApi
     .searchTracks(songName)

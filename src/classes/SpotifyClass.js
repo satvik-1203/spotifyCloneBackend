@@ -38,6 +38,40 @@ class SpotifyClass extends SpotifyWebApi {
       res.status(401).send("Error from the backend");
     }
   }
+
+  async getUserInfo(req, res) {
+    super.setAccessToken(req.params.accessToken);
+
+    super
+      .getMe()
+      .then((data) => {
+        res.json(data.body);
+      })
+      .catch((err) => {
+        console.log("Something went wrong");
+        res.status(500).send("Something went wrong");
+      });
+
+    super.resetAccessToken();
+  }
+
+  async search(req, res) {
+    const accessToke = req.params.accessToken;
+
+    if (!accessToke) return res.status(401).send("No access token provided");
+
+    super.setAccessToken();
+    super
+      .searchTracks(req.params.name)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.status(401).send("Server failed");
+      });
+
+    super.resetAccessToken();
+  }
 }
 
 module.exports = SpotifyClass;
