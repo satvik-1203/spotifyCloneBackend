@@ -1,11 +1,6 @@
 const SpotifyWebApi = require("spotify-web-api-node");
 const Token = require("../schema/refreshToken");
-
-const credentials = {
-  clientId: "0e098488165c416b8f3451c972feee06",
-  clientSecret: "689ce50f2eef4ca4bc6450d19e3e1a1d",
-  redirectUri: "http://localhost:3000",
-};
+const credentials = require("../../secrets");
 
 class SpotifyClass extends SpotifyWebApi {
   constructor() {
@@ -29,7 +24,6 @@ class SpotifyClass extends SpotifyWebApi {
       });
       try {
         await token.save();
-        console.log(result.body);
         res.send(tokenData);
       } catch (err) {
         res.status(400).send("Already exist");
@@ -57,7 +51,6 @@ class SpotifyClass extends SpotifyWebApi {
 
   async spotifySearch(req, res) {
     const accessToken = req.params.accessToken;
-    console.log(accessToken);
     if (!accessToken) return res.status(401).send("No access token provided");
 
     super.setAccessToken(accessToken);
