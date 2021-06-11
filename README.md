@@ -1,4 +1,4 @@
-# spotifyCloneBackend
+# Spotify App
 
 > Hooked up express server to spotify servers.
 >
