@@ -1,8 +1,10 @@
 # spotifyCloneBackend
-### Todo ###
-  - API calls for albumbs and podcasts as well
-  - Hooking up to database after the user logs in
-  - cleaning the spotify route into one file
+
+> Hooked up express server to spotify servers.
+>
+> Extended the spotify server library using inheritance. 
+> 
+> Used mongodb to store refresh tokens.
 
 
 ### Contributers
